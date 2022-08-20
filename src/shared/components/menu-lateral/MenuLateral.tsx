@@ -1,9 +1,42 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { Avatar, Divider, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from '@mui/system';
 import { Home, TramSharp } from '@mui/icons-material';
 import { useDrawerContext } from '../../contexts';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+
+
+interface IListItemLinkProps {
+    to: string;
+    icon: string;
+    label: string;
+    onClick: (() => void) | undefined;
+}
+
+const ListItemLink: React.FC<IListItemLinkProps> = ({to, icon, label, onClick  }) => {
+
+    const navigate = useNavigate();
+
+    const reselvedPath = useResolvedPath(to);
+
+    const match = useMatch({ path: reselvedPath.pathname, end: false });
+
+    const handleClick = () => {
+        navigate(to);
+        onClick?.();
+    };
+
+    return(
+        <ListItemButton selected={!!match} onClick={handleClick}>
+            <ListItemIcon>
+                 <Icon> <Home/> </Icon>
+             </ListItemIcon>
+            <ListItemText primary="Página inicial" />
+        </ListItemButton>
+    );
+};
+
 
 interface IMenuLateralProps {
     children: React.ReactNode;
@@ -30,12 +63,7 @@ return (
 
             <Box flex={1}>
                 <List component="nav">
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <Icon> <Home/> </Icon>
-                        </ListItemIcon>
-                        <ListItemText primary="Página inicial" />
-                    </ListItemButton>
+                    <ListItemLink icon='home' label='Página Inicial' to='/pagina-inicial' onClick={smDown ? toggleDrawerOpen : undefined} />
                 </List>
             </Box>
 
