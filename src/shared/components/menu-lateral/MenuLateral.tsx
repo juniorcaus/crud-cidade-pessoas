@@ -18,9 +18,8 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({to, icon, label, onClick  }
 
     const navigate = useNavigate();
 
-    const reselvedPath = useResolvedPath(to);
-
-    const match = useMatch({ path: reselvedPath.pathname, end: false });
+    const resolvedPath = useResolvedPath(to);
+    const match = useMatch({ path: resolvedPath.pathname, end: false });
 
     const handleClick = () => {
         navigate(to);
@@ -30,9 +29,9 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({to, icon, label, onClick  }
     return(
         <ListItemButton selected={!!match} onClick={handleClick}>
             <ListItemIcon>
-                 <Icon> <Home/> </Icon>
+                 <Icon> {icon} </Icon>
              </ListItemIcon>
-            <ListItemText primary="Página inicial" />
+            <ListItemText primary={label} />
         </ListItemButton>
     );
 };
@@ -46,7 +45,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
+    const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
 
 
 return (
@@ -63,7 +62,9 @@ return (
 
             <Box flex={1}>
                 <List component="nav">
-                    <ListItemLink icon='home' label='Página Inicial' to='/pagina-inicial' onClick={smDown ? toggleDrawerOpen : undefined} />
+                   {drawerOptions.map(drawerOptions => (
+                     <ListItemLink key={drawerOptions.path} icon={drawerOptions.icon}  label='Página Inicial' to='/pagina-inicial' onClick={smDown ? toggleDrawerOpen : undefined} />
+                   ))}
                 </List>
             </Box>
 
